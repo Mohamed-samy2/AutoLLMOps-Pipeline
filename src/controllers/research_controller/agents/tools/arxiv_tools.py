@@ -3,8 +3,22 @@ import requests
 import feedparser
 
 
-@tool()
-def arxiv_search(query:str):
+@tool(description="""
+    Search and retrieve the latest research papers from arXiv based on a given query.
+
+    This tool sends a query to the arXiv API, retrieves up to 5 of the most recently submitted papers,
+    and returns their titles, abstracts, and direct PDF download links.
+
+    Parameters:
+        query (str): The search term to look for in arXiv's database.
+
+    Returns:
+        List[Dict]: A list of dictionaries, each containing:
+            - 'title': The title of the paper.
+            - 'abstract': A brief summary of the paper.
+            - 'pdf_url': A direct link to the PDF version of the paper.
+    """)
+async def arxiv_search(query:str):
     
     url = "https://export.arxiv.org/api/query"
     params = {

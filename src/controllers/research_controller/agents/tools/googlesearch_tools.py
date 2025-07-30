@@ -4,8 +4,23 @@ from serpapi import GoogleSearch
 from bs4 import BeautifulSoup
 import os
 
-@tool
-def google_search(query:str):
+@tool(description="""
+    Performs a Google search using SerpAPI and retrieves the top 10 organic results.
+
+    This tool is useful for finding general knowledge or supplementing specialized queries
+    with broader contextual information. It returns a concatenated string of the result titles,
+    snippets (previews), and links, separated for readability.
+
+    Parameters:
+        query (str): The search query to submit to Google.
+
+    Returns:
+        str: A formatted string containing the top 10 search results, each including:
+            - Title of the result
+            - Snippet (short description)
+            - Link to the source
+    """)
+async def google_search(query:str):
     """Finds general knowledge information using Google search. Can also be used
     to augment more 'general' knowledge to a previous specialist query."""
 
@@ -17,7 +32,7 @@ def google_search(query:str):
     search = GoogleSearch({
         **serpapi_params,
         "q": query,
-        "num": 5
+        "num": 10
     })
     
     results = search.get_dict()["organic_results"]
@@ -27,11 +42,25 @@ def google_search(query:str):
     
     return contexts
 
-@tool
-def get_link_content(url:str):
+@tool(description="""
+    Fetches and extracts clean, readable text content from a web page URL.
+
+    This tool sends an HTTP request to the provided URL, parses the HTML,
+    removes all script, style, and noscript elements, and returns the visible text.
+    It is useful for summarizing article content or extracting relevant information
+    from a webpage.
+
+    Parameters:
+        url (str): The URL of the web page to fetch.
+
+    Returns:
+        str: Cleaned and readable text extracted from the web page.
+            If an error occurs during the request, returns an error message.
+    """)
+async def get_link_content(url:str):
     try:
         # Send HTTP request
-        response = requests.get(url, timeout=20)
+        response = requests.get(url, timeout=30)
         response.raise_for_status()
 
         # Parse HTML

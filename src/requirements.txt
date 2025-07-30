@@ -1,4 +1,3 @@
-PyYAML==6.0.2
 langgraph==0.5.4
 langchain-community==0.3.27
 langchain==0.3.27
@@ -6,14 +5,19 @@ psycopg[binary,pool]==3.2.9
 langgraph-checkpoint-postgres==2.0.23
 langchain-google-genai==2.1.8
 transformers==4.54.0
-torch==2.7.1
---extra-index-url https://download.pytorch.org/whl/cu126
+# torch==2.7.1
+# --extra-index-url https://download.pytorch.org/whl/cu126
 sentence-transformers==5.0.0
 asyncpg==0.30.0
 SQLAlchemy==2.0.41
-langchain-huggingface==0.3.1
+# langchain-huggingface==0.3.1
 pydantic-settings==2.10.1
-python-dotenv==1.1.1
+# python-dotenv==1.1.1
 uvicorn[standard]==0.35.0
 fastapi==0.116.1
 PyJWT==2.10.1
+wikipedia==1.4.0
+serpapi==0.1.5
+beautifulsoup4==4.13.4
+feedparser==6.0.11
+langchain-tavily==0.2.11
