@@ -1,5 +1,5 @@
 from .LlmEnums import LlmProviders
-from .providers import Gemini 
+from .providers.Gemini import Gemini 
 
 class LlmFactory:
     def __init__(self, config: dict):

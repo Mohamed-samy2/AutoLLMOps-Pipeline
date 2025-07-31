@@ -8,14 +8,14 @@ from config.config import get_settings
 import logging
 
 class training_controller:
-    def __init__(self,base_llm,db_client ):
+    def __init__(self,base_llm,db_client):
         self.base_llm = base_llm
         self.db_client = db_client
         self.settings = get_settings()
         self.logger = logging.getLogger(__name__)
         
         self.model = AutoModelForCausalLM.from_pretrained(self.base_llm, torch_dtype=torch.bfloat16).to("cuda")
-        self.tokenizer = AutoTokenizer.from_pretrained(self.base_llm, use_fast=True)
+        self.tokenizer = AutoTokenizer.from_pretrained(self.base_llm)
         
     
     async def run(self):
@@ -47,6 +47,7 @@ class training_controller:
             save_strategy="epoch", # Save the model at the end of each epoch.
             evaluation_strategy="epoch", # Evaluate the model at the end of each epoch.
             report_to="wandb", # Report training metrics to Weights & Biases for tracking.
+            run_name=f"training_run_{self.base_llm}", # Name of the training run for tracking in Weights & Biases.
             logging_dir=self.settings.LOGGING_DIR, # Directory to save logs.
             bf16=True, # Use bfloat16 precision for training to reduce memory usage and speed up training on supported hardware.
             optim="adamw_torch", # Use the AdamW optimizer from PyTorch.

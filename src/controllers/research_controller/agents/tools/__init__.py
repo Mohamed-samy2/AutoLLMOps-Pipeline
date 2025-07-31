@@ -4,7 +4,8 @@ from .wikipedia_tools import search_wikipedia
 from langchain_core.tools.base import BaseTool
 from langchain_tavily import TavilySearch
 from langchain_core.tools import tool
-
+from dotenv import load_dotenv
+load_dotenv()
 
 @tool(description="""
     Asynchronously inserts a piece of raw text along with its metadata into the database.

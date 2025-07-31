@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     LLM_PROVIDER:str
     LLM_MODEL_ID:str
     API_KEY:str
+    TEMPERATURE:float
     
     # ============================ Training Config ============================
     TRAINING_OUTPUT_DIR:str

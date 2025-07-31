@@ -1,4 +1,4 @@
-from .providers import postgres
+from .providers.postgres import postgres
 from .DbEnums import PostgresDbEnums
 from sqlalchemy.orm import sessionmaker
 

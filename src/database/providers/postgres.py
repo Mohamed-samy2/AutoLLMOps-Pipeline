@@ -6,7 +6,7 @@ from sqlalchemy.sql import text as sql_query
 import json
 from ..db_schemas.postgres import QAPair
 
-class PGVector(DbInterface):
+class postgres(DbInterface):
     def __init__(self,db_client):
         self.db_client = db_client
         self.logger = logging.getLogger(__name__)
@@ -119,7 +119,7 @@ class PGVector(DbInterface):
         
         if not await self.is_table_existed(PostgresRawTableEnum.TABLE_NAME.value):
             self.logger.warning("Raw Text table does not exist.")
-            return False
+            return 
         
         async with self.db_client() as session:
             async with session.begin():

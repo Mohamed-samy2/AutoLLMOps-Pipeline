@@ -1,18 +1,25 @@
-postgres:
-  image: postgres:14.18
-  container_name: postgres
-  ports:
-    - "5400:5432"
-  volumes:
-    - postgres:/var/lib/postgresql/data
-  env_file:
-    - ./enviroments/.env.postgres
-  networks:
-    - backend
-  restart: always
-  healthcheck:
-    test: ["CMD-SHELL", "pg_isready -U postgres"]
-    interval: 1m30s
-    timeout: 30s
-    retries: 5
-    start_period: 30s
+services:
+  postgres:
+    image: postgres:14.18
+    container_name: postgres
+    ports:
+      - "5400:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    env_file:
+      - ./enviroments/.env.postgres
+    networks:
+      - backend
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+networks:
+  backend:
+    driver: bridge
+volumes:
+  postgres:
