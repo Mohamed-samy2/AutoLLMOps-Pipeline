@@ -5,6 +5,7 @@ from .schemas.webschema import WebState
 from langchain_core.messages import  ToolMessage,SystemMessage
 from langchain_core.runnables import RunnableConfig
 from config.config import get_settings
+from .prompts.websearch_prompts import websearch_prompts
 
 class websearch_agent:
     def __init__(self,llm,checkpointer=None,db_client=None):
@@ -38,7 +39,7 @@ class websearch_agent:
     async def call_model(self, state: WebState, config:RunnableConfig): 
         try:                                                                                                                                                                                                                                                                               
         
-            system_prompt = SystemMessage()
+            system_prompt = SystemMessage(content=websearch_prompts.WEBSEARCH_SYSTEM_PROMPT.value)
                         
             chat_messages = [system_prompt] + state['messages'] + state['web_messages']
 

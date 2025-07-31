@@ -5,6 +5,7 @@ from .schemas.arxivschema import ArxivState
 from langchain_core.messages import  ToolMessage,SystemMessage
 from langchain_core.runnables import RunnableConfig
 from config.config import get_settings
+from .prompts.arxiv_prompts import arxiv_prompts
 
 class arxiv_agent:
     def __init__(self,llm,checkpointer=None, db_client=None):
@@ -37,7 +38,7 @@ class arxiv_agent:
 
     async def call_model(self, state: ArxivState, config:RunnableConfig): 
         try:                                                                                                                                                                                                                                                        
-            system_prompt = SystemMessage()
+            system_prompt = SystemMessage(content=arxiv_prompts.ARXIV_SYSTEM_PROMPT.value)
             
             chat_messages = [system_prompt] + state['messages'] + state['arxiv_messages']
             

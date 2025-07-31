@@ -37,9 +37,9 @@ class training_controller:
     def train(self,train_data,eval_data):
         
         sft_config = TrainingArguments(
-            learning_rate=1e-4, # Learning rate for training. 
-            num_train_epochs=2, #  Set the number of epochs to train the model.
-            per_device_train_batch_size=1, # Batch size for each device (e.g., GPU) during training. 
+            learning_rate=self.settings.LEARNING_RATE, # Learning rate for training. 
+            num_train_epochs=self.settings.NUM_EPOCHS, #  Set the number of epochs to train the model.
+            per_device_train_batch_size=self.settings.BATCH_SIZE, # Batch size for each device (e.g., GPU) during training. 
             gradient_accumulation_steps=8, # Number of steps before performing a backward/update pass to accumulate gradients.
             gradient_checkpointing=False, # Enable gradient checkpointing to reduce memory usage during training at the cost of slower training speed.
             logging_steps=10,  # Frequency of logging training progress (log every 10 steps).

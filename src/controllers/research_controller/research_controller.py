@@ -18,7 +18,7 @@ class research_controller:
     
     async def run(self, message):
         
-        for i in range(3):
+        for i in range(4):
             config = {'configurable': {
                 'thread_id': str(uuid.uuid4()),
             }}

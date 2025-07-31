@@ -5,7 +5,7 @@ from .schemas.googleschema import GoogleState
 from langchain_core.messages import  ToolMessage,SystemMessage
 from langchain_core.runnables import RunnableConfig
 from config.config import get_settings
-
+from .prompts.google_prompts import google_prompts
 class google_agent:
     def __init__(self,llm,checkpointer=None, db_client=None):
         
@@ -38,7 +38,7 @@ class google_agent:
     async def call_model(self, state: GoogleState, config:RunnableConfig): 
         try:                                                                                                                                                                                                                                                                               
         
-            system_prompt = SystemMessage()
+            system_prompt = SystemMessage(content=google_prompts.GOOGLE_SYSTEM_PROMPT.value)
                         
             chat_messages = [system_prompt] + state['messages'] + state['google_messages']
             

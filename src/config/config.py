@@ -20,6 +20,17 @@ class Settings(BaseSettings):
     LLM_MODEL_ID:str
     API_KEY:str
     
+    # ============================ Training Config ============================
+    TRAINING_OUTPUT_DIR:str
+    LOGGING_DIR:str
+    NUM_EPOCHS:int
+    BATCH_SIZE:int
+    LEARNING_RATE:float
+    # ============================ Other Services Config ============================
+    SERPAPI_KEY:str
+    WANDB_API_KEY:str
+    TAVILY_API_KEY:str
+
     class Config:
         env_file = ".env"
         
