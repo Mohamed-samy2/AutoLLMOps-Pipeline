@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from database.DbFactory import DbFactory
 from Llm.LlmFactory import LlmFactory
 from psycopg import AsyncConnection
-from psycopg_pool import AsyncConnectionPool
+import wandb
 
 settings = get_settings()
 
@@ -39,15 +39,12 @@ async def lifespan(app: FastAPI):
     app.llm = llm_factory.create(provider=settings.LLM_PROVIDER)
     app.llm.set_generation_model(model_id=settings.LLM_MODEL_ID)
 
-    conn = await AsyncConnection.connect(conninfo=postrgres_conn.replace("+asyncpg", ""),autocommit=True)
-    checkpointer = AsyncPostgresSaver(conn=conn)
-    await checkpointer.setup()
-    await conn.close()
+    conn = await AsyncConnection.connect(conninfo=postrgres_conn.replace("+asyncpg", ""), autocommit=True)
+    app.checkpointer = AsyncPostgresSaver(conn=conn)
+    await app.checkpointer.setup()
     
-    pool = AsyncConnectionPool(conninfo=postrgres_conn.replace("+asyncpg", ""))
-    await pool.open(wait=True)
-    app.checkpointer = AsyncPostgresSaver(pool)
-    
+    wandb.login(key=settings.WANDB_API_KEY)
+
     yield
     
     print("Shutting down...")
