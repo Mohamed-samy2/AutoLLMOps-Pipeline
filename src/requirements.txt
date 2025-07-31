@@ -5,8 +5,11 @@ psycopg[binary,pool]==3.2.9
 langgraph-checkpoint-postgres==2.0.23
 langchain-google-genai==2.1.8
 transformers==4.54.0
-# torch==2.7.1
-# --extra-index-url https://download.pytorch.org/whl/cu126
+trl==0.20.0
+peft==0.16.0
+wandb==0.21.0
+torch==2.7.1
+--extra-index-url https://download.pytorch.org/whl/cu126
 sentence-transformers==5.0.0
 asyncpg==0.30.0
 SQLAlchemy==2.0.41
@@ -21,3 +24,4 @@ serpapi==0.1.5
 beautifulsoup4==4.13.4
 feedparser==6.0.11
 langchain-tavily==0.2.11
+fitz==0.0.1.dev2

@@ -70,7 +70,8 @@ class PGVector(DbInterface):
                     CREATE TABLE IF NOT EXISTS {PostgresQATableEnum.TABLE_NAME.value} (
                         id SERIAL PRIMARY KEY,
                         {PostgresQATableEnum.QUESTION.value} TEXT NOT NULL,
-                        {PostgresQATableEnum.ANSWER.value} TEXT NOT NULL
+                        {PostgresQATableEnum.ANSWER.value} TEXT NOT NULL,
+                        {PostgresQATableEnum.TYPE.value} VARCHAR(50) NOT NULL
                     );
                 """)
                 await session.execute(create_table_query)
@@ -96,7 +97,7 @@ class PGVector(DbInterface):
                 await session.commit()
         return True
 
-    async def insert_qa(self, data: List[QAPair]):
+    async def insert_qa(self, data: List[QAPair],type:str):
         
         if not await self.is_table_existed(PostgresQATableEnum.TABLE_NAME.value):
             await self.create_qa_table()
@@ -104,12 +105,43 @@ class PGVector(DbInterface):
         async with self.db_client() as session:
             async with session.begin():
                 for i in range(0, len(data), 50):
-                    batch = [{"question": item.question, "answer": item.answer} for item in data[i:i + 50]]
+                    batch = [{"question": item.question, "answer": item.answer , "type": type} for item in data[i:i + 50]]
                     insert_query = sql_query(f"""
                         INSERT INTO {PostgresQATableEnum.TABLE_NAME.value} 
-                        ({PostgresQATableEnum.QUESTION.value}, {PostgresQATableEnum.ANSWER.value}) 
-                        VALUES (:question, :answer);
+                        ({PostgresQATableEnum.QUESTION.value}, {PostgresQATableEnum.ANSWER.value}, {PostgresQATableEnum.TYPE.value}) 
+                        VALUES (:question, :answer, :type);
                     """)
                     await session.execute(insert_query, batch)
                     await session.commit()
         return True
+    
+    async def get_raw_text(self):
+        
+        if not await self.is_table_existed(PostgresRawTableEnum.TABLE_NAME.value):
+            self.logger.warning("Raw Text table does not exist.")
+            return False
+        
+        async with self.db_client() as session:
+            async with session.begin():
+                select_query = sql_query(f"""
+                                        SELECT * FROM {PostgresRawTableEnum.TABLE_NAME.value};
+                                        """)
+                result = await session.stream(select_query)
+                async for row in result:
+                    yield row
+
+    async def get_qa_pairs(self, type: str):
+        if not await self.is_table_existed(PostgresQATableEnum.TABLE_NAME.value):
+            self.logger.warning("QA table does not exist.")
+            return False
+        
+        async with self.db_client() as session:
+            async with session.begin():
+                select_query = sql_query(f"""
+                                        SELECT * FROM {PostgresQATableEnum.TABLE_NAME.value} 
+                                        WHERE {PostgresQATableEnum.TYPE.value} = :type;
+                                        """)
+                results = await session.execute(select_query, {"type": type})
+                records = results.fetchall()
+
+        return [QAPair(**row._mapping) for row in records]

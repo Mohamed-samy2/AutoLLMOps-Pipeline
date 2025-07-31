@@ -9,6 +9,7 @@ class PostgresQATableEnum(Enum):
     TABLE_NAME = "qa_texts"
     QUESTION = "question"
     ANSWER = "answer"
+    TYPE = "type"
 
 class PostgresDbEnums(Enum):
     POSTGRES = "postgres"

@@ -26,5 +26,13 @@ class DbInterface(ABC):
         pass
 
     @abstractmethod
-    async def insert_qa(self, data: List[QAPair]):
+    async def insert_qa(self, data: List[QAPair], type: str):
+        pass
+
+    @abstractmethod
+    async def get_raw_text(self):
+        pass
+    
+    @abstractmethod
+    async def get_qa_pairs(self, type: str):
         pass
