@@ -6,7 +6,6 @@ from langchain_core.messages import  ToolMessage,SystemMessage
 from langchain_core.runnables import RunnableConfig
 from config.config import get_settings
 from .prompts.wikipedia_prompts import wikipedia_prompts
-import time
 class wikipedia_agent:
     def __init__(self,llm,checkpointer=None,db_client=None):
         
@@ -42,7 +41,6 @@ class wikipedia_agent:
             system_prompt = SystemMessage(content=wikipedia_prompts.WIKIPEDIA_SYSTEM_PROMPT.value)
 
             chat_messages = [system_prompt] + state['messages'] + state['wiki_messages']
-            time.sleep(10)
             
             response = await self.llm.generate_response(messages=chat_messages, tools=wikipedia_tools)
         

@@ -6,7 +6,6 @@ from langchain_core.messages import  ToolMessage,SystemMessage
 from langchain_core.runnables import RunnableConfig
 from config.config import get_settings
 from .prompts.arxiv_prompts import arxiv_prompts
-import time
 class arxiv_agent:
     def __init__(self,llm,checkpointer=None, db_client=None):
         
@@ -41,7 +40,6 @@ class arxiv_agent:
             system_prompt = SystemMessage(content=arxiv_prompts.ARXIV_SYSTEM_PROMPT.value)
             
             chat_messages = [system_prompt] + state['messages'] + state['arxiv_messages']
-            time.sleep(10)
             response = await self.llm.generate_response(messages=chat_messages, tools=arxiv_tools)
         
             return {'arxiv_messages': response}

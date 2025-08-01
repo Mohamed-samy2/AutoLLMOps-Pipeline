@@ -5,7 +5,7 @@ from.schemas.QASchema import QAList
 import fitz
 import json
 from .prompts.qa_prompts import qa_prompts
-import time
+
 class data_controller:
     def __init__(self, settings, llm, db_client):
         self.llm = llm
@@ -25,7 +25,6 @@ class data_controller:
         return True
     
     async def call_model(self,message):
-        time.sleep(10)  # Adding a delay to avoid rate limiting issues
         system_prompt = SystemMessage(content=qa_prompts.QA_SYSTEM_PROMPT.value)
     
         chat_messages = [system_prompt] + [HumanMessage(content=message)]

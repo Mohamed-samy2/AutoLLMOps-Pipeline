@@ -45,7 +45,6 @@ class training_controller:
             logging_steps=10,  # Frequency of logging training progress (log every 10 steps).
             output_dir=self.settings.TRAINING_OUTPUT_DIR, # Directory to save the model and training artifacts.
             save_strategy="epoch", # Save the model at the end of each epoch.
-            evaluation_strategy="epoch", # Evaluate the model at the end of each epoch.
             report_to="wandb", # Report training metrics to Weights & Biases for tracking.
             run_name=f"training_run_{self.base_llm}", # Name of the training run for tracking in Weights & Biases.
             logging_dir=self.settings.LOGGING_DIR, # Directory to save logs.

@@ -11,7 +11,6 @@ from langgraph.graph import StateGraph,END
 from langchain_core.messages import HumanMessage,SystemMessage
 from langchain_core.runnables import RunnableConfig
 from .prompts.orchescrator_prompts import orchescrator_prompts
-import time
 class orchestrator_agent:
     def __init__(self,llm,
                 checkpointer,
@@ -61,7 +60,6 @@ class orchestrator_agent:
             system_prompt = SystemMessage(content=orchescrator_prompts.PLANNER_SYSTEM_PROMPT.value)
 
             chat_messages = [system_prompt] + state['messages']
-            time.sleep(10)
             response = await self.llm.generate_response(messages=chat_messages)
 
             return {'messages': response}

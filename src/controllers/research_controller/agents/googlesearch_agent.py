@@ -6,7 +6,6 @@ from langchain_core.messages import  ToolMessage,SystemMessage
 from langchain_core.runnables import RunnableConfig
 from config.config import get_settings
 from .prompts.google_prompts import google_prompts
-import time
 class google_agent:
     def __init__(self,llm,checkpointer=None, db_client=None):
         
@@ -42,7 +41,6 @@ class google_agent:
             system_prompt = SystemMessage(content=google_prompts.GOOGLE_SYSTEM_PROMPT.value)
                         
             chat_messages = [system_prompt] + state['messages'] + state['google_messages']
-            time.sleep(10)
             response = await self.llm.generate_response(messages=chat_messages, tools=google_tools)
 
             return {'google_messages': response}
