@@ -9,7 +9,7 @@ from database.DbFactory import DbFactory
 from Llm.LlmFactory import LlmFactory
 from psycopg import AsyncConnection
 import wandb
-
+from routes.fine_tune import llm_finetuning
 settings = get_settings()
 
 @asynccontextmanager
@@ -60,3 +60,4 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(llm_finetuning)

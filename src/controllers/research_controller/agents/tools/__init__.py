@@ -4,6 +4,8 @@ from .wikipedia_tools import search_wikipedia
 from langchain_core.tools.base import BaseTool
 from langchain_tavily import TavilySearch
 from langchain_core.tools import tool
+from .schemas.insertschema import insertschema
+import json
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -21,15 +23,28 @@ load_dotenv()
 
     Returns:
         str: A success or failure message indicating the result of the insertion.
-    """)
-async def insert_raw_text(text: str, metadata: dict, db_client = None):
-    
-    result = await db_client.insert_raw_text(text, metadata)
-    
+    """,args_schema=insertschema)
+async def insert_raw_text(raw_text: str, metadata: str=None, db_client = None):
+    parsed_metadata = None
+
+    if metadata:
+        try:
+            parsed_metadata = json.loads(metadata)
+        except json.JSONDecodeError:
+            parsed_metadata = None  # fallback if JSON is invalid
+
+    result = await db_client.insert_raw_text(raw_text, parsed_metadata)
+
     if result:
         return "Raw text inserted successfully."
     else:
         return "Failed to insert raw text."
+            
+    
+    
+    
+        
+
 
 arxiv_tools: list[BaseTool] = [arxiv_search,insert_raw_text]
 google_tools: list[BaseTool] = [google_search,get_link_content, insert_raw_text]

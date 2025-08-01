@@ -9,5 +9,8 @@ class arxiv_prompts(Enum):
         "1. arxiv_search: Use this tool to search arXiv for papers related to the topic.",
         "2. insert_raw_text: Use this tool to insert the collected raw text into the database.",
         "Focus on gathering high-quality academic content, including abstracts, introductions, and other relevant sections.",
+        "Insert **every piece of raw text you collect** using `insert_raw_text`.",
+        "Do not summarize, clean, or modify the content in any way.",
+        "Always insert the full raw text exactly as you found it.",
         "You are encouraged to use the tools multiple times to ensure comprehensive data collection."
     ])

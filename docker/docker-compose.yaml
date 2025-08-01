@@ -1,4 +1,21 @@
 services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/app/Dockerfile
+    container_name: app
+    networks:
+      - backend
+    restart: always
+    depends_on:
+      pgvector:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./enviroments/.env.app
   postgres:
     image: postgres:14.18
     container_name: postgres

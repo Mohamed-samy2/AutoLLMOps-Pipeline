@@ -22,7 +22,7 @@ class DbInterface(ABC):
     async def create_qa_table(self):
         pass
     @abstractmethod
-    async def insert_raw_text(self, text:str,metadata:dict):
+    async def insert_raw_text(self, text:str,metadata):
         pass
 
     @abstractmethod

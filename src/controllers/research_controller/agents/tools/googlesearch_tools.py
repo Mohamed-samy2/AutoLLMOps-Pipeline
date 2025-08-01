@@ -3,6 +3,8 @@ import requests
 from serpapi import GoogleSearch
 from bs4 import BeautifulSoup
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 @tool(description="""
     Performs a Google search using SerpAPI and retrieves the top 10 organic results.

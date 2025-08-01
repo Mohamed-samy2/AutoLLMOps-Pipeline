@@ -9,7 +9,7 @@ from ..db_schemas.postgres import QAPair
 class postgres(DbInterface):
     def __init__(self,db_client):
         self.db_client = db_client
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger('uvicorn')
     
     async def connect(self):
         try:
@@ -79,7 +79,7 @@ class postgres(DbInterface):
                 
         return True
     
-    async def insert_raw_text(self, text:str, metadata:dict):
+    async def insert_raw_text(self, text:str, metadata):
         
         if not await self.is_table_existed(PostgresRawTableEnum.TABLE_NAME.value):
             await self.create_raw_table()
@@ -112,7 +112,6 @@ class postgres(DbInterface):
                         VALUES (:question, :answer, :type);
                     """)
                     await session.execute(insert_query, batch)
-                    await session.commit()
         return True
     
     async def get_raw_text(self):

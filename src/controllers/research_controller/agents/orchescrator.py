@@ -11,6 +11,7 @@ from langgraph.graph import StateGraph,END
 from langchain_core.messages import HumanMessage,SystemMessage
 from langchain_core.runnables import RunnableConfig
 from .prompts.orchescrator_prompts import orchescrator_prompts
+import time
 class orchestrator_agent:
     def __init__(self,llm,
                 checkpointer,
@@ -19,7 +20,7 @@ class orchestrator_agent:
         self.llm = llm
         self.db_client = db_client
         self.checkpointer = checkpointer
-        self.logger = logging.getLogger(__name__)   
+        self.logger = logging.getLogger('uvicorn')   
         
         self.arxiv_agent = arxiv_agent(llm=self.llm, db_client=self.db_client, checkpointer=self.checkpointer)
         self.google_agent = google_agent(llm=self.llm, db_client=self.db_client, checkpointer=self.checkpointer)
@@ -43,8 +44,10 @@ class orchestrator_agent:
             self.workflow.add_edge('GoogleAgent',END)
             self.workflow.add_edge('WebSearchAgent',END)
             self.workflow.add_edge('WikipediaAgent',END)
+            
+            self.workflow.set_entry_point("Planner")
 
-            self.graph = self.workflow.compile(checkpointer=self.checkpointer,debug=False)
+            self.graph = self.workflow.compile(checkpointer=self.checkpointer,debug=True,name="Orchestrator Agent")
             
             image_data = self.graph.get_graph(xray=1).draw_mermaid_png()
             with open("graph.png", "wb") as f:
@@ -58,7 +61,7 @@ class orchestrator_agent:
             system_prompt = SystemMessage(content=orchescrator_prompts.PLANNER_SYSTEM_PROMPT.value)
 
             chat_messages = [system_prompt] + state['messages']
-            
+            time.sleep(10)
             response = await self.llm.generate_response(messages=chat_messages)
 
             return {'messages': response}

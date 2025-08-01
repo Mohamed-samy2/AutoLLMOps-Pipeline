@@ -2,7 +2,7 @@ import torch
 import pandas as pd
 from datasets import Dataset
 from transformers import TrainingArguments, AutoTokenizer, AutoModelForCausalLM
-from trl import SFTTrainer, DataCollatorForCompletionOnlyLM, SFTConfig
+from trl import SFTTrainer, SFTConfig
 from peft import LoraConfig
 from config.config import get_settings
 import logging
@@ -12,7 +12,7 @@ class training_controller:
         self.base_llm = base_llm
         self.db_client = db_client
         self.settings = get_settings()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger('uvicorn')
         
         self.model = AutoModelForCausalLM.from_pretrained(self.base_llm, torch_dtype=torch.bfloat16).to("cuda")
         self.tokenizer = AutoTokenizer.from_pretrained(self.base_llm)

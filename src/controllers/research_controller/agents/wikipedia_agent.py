@@ -6,11 +6,12 @@ from langchain_core.messages import  ToolMessage,SystemMessage
 from langchain_core.runnables import RunnableConfig
 from config.config import get_settings
 from .prompts.wikipedia_prompts import wikipedia_prompts
+import time
 class wikipedia_agent:
     def __init__(self,llm,checkpointer=None,db_client=None):
         
         self.app_settings = get_settings()
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger('uvicorn')
         self.db_client = db_client        
         
         self.llm = llm
@@ -29,7 +30,7 @@ class wikipedia_agent:
             self.graph = graph.compile(
                 checkpointer=checkpointer,
                 name="Wikipedia Agent",
-                debug=False
+                debug=True
             )
             
         except Exception as e:
@@ -41,6 +42,7 @@ class wikipedia_agent:
             system_prompt = SystemMessage(content=wikipedia_prompts.WIKIPEDIA_SYSTEM_PROMPT.value)
 
             chat_messages = [system_prompt] + state['messages'] + state['wiki_messages']
+            time.sleep(10)
             
             response = await self.llm.generate_response(messages=chat_messages, tools=wikipedia_tools)
         
@@ -51,7 +53,8 @@ class wikipedia_agent:
         
     async def exists_action(self, state: WikiState, config:RunnableConfig):
         result = state['wiki_messages'][-1]
-        return len(result.tool_calls) > 0
+        tool_calls = getattr(result, "tool_calls", None)
+        return bool(tool_calls)
     
     async def take_action(self,state: WikiState, config:RunnableConfig):
         try:

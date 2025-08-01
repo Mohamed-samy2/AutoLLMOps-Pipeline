@@ -10,5 +10,8 @@ class google_prompts(Enum):
         "2. get_link_content: Use this tool to fetch and extract readable text from web pages found through search.",
         "3. insert_raw_text: Use this tool to insert the collected raw text into the database.",
         "Focus on gathering comprehensive, high-quality content from a wide range of reliable sources.",
+         "Insert **every piece of raw text you collect** using `insert_raw_text`.",
+        "Do not summarize, clean, or modify the content in any way.",
+        "Always insert the full raw text exactly as you found it.",
         "You can and should use these tools multiple times as needed to ensure thorough coverage of the topic."
     ])

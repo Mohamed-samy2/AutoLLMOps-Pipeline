@@ -4,13 +4,14 @@ from langchain_core.messages import HumanMessage,SystemMessage
 from.schemas.QASchema import QAList
 import fitz
 import json
-
+from .prompts.qa_prompts import qa_prompts
+import time
 class data_controller:
-    def __init__(self,settings, llm, db_client):
+    def __init__(self, settings, llm, db_client):
         self.llm = llm
         self.db_client = db_client
         self.settings=settings
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger('uvicorn')
     
     async def run(self):
         
@@ -24,8 +25,8 @@ class data_controller:
         return True
     
     async def call_model(self,message):
-        
-        system_prompt = SystemMessage()
+        time.sleep(10)  # Adding a delay to avoid rate limiting issues
+        system_prompt = SystemMessage(content=qa_prompts.QA_SYSTEM_PROMPT.value)
     
         chat_messages = [system_prompt] + [HumanMessage(content=message)]
         response = await self.llm.generate_response(messages=chat_messages,response_schema=QAList)
@@ -80,8 +81,9 @@ class data_controller:
     async def process_db(self):
         i = 0
         async for row in self.db_client.get_raw_text():
-            text = row['raw_text']
-            metadata = json.loads(row['metadata'])
+
+            text = row[1]
+            metadata = row[2]
             full_text = text + "\n" + f"Metadata: {json.dumps(metadata, ensure_ascii=False)}\n\n"
             q_a_pairs = await self.call_model(full_text)
     
@@ -91,9 +93,9 @@ class data_controller:
                 else:
                     await self.db_client.insert_qa(q_a_pairs.items, type='train')
                 i += 1
-                self.logger.info(f"Processed row {row['id']} and inserted Q&A pairs into the database.")
+                self.logger.info(f"Processed row {row[0]} and inserted Q&A pairs into the database.")
             else:
-                self.logger.warning(f"No Q&A pairs generated for row {row['id']}.")
+                self.logger.warning(f"No Q&A pairs generated for row {row[0]}.")
                 
         return True
 

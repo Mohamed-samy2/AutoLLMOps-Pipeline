@@ -1,7 +1,9 @@
 from langchain_core.tools import tool
 import requests
 import feedparser
-
+from config.config import get_settings
+import os
+settings = get_settings()
 
 @tool(description="""
     Search and retrieve the latest research papers from arXiv based on a given query.
@@ -42,6 +44,17 @@ async def arxiv_search(query:str):
             "abstract": entry.summary,
             "pdf_url": entry.link.replace("abs", "pdf") + ".pdf",
         }
+        try:
+            save_dir = settings.DATA_SOURCES_PATH
+            pdf_name = os.path.join(save_dir, f"{result['title'].replace(' ', '_').replace('/', '_').replace('\\', '_')}.pdf")
+            pdf_res = requests.get(result['pdf_url'])
+            with open(pdf_name, 'wb') as f:
+                f.write(pdf_res.content)
+        
+        except Exception as e:
+            print(f"Error downloading {result['pdf_url']}: {e}")
+            pdf_name = None
+
         results.append(result)
 
     return results

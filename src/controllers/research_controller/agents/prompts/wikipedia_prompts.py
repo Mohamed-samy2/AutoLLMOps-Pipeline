@@ -9,5 +9,8 @@ class wikipedia_prompts(Enum):
     "1. search_wikipedia: Use this tool to search Wikipedia for pages related to the topic.",
     "2. insert_raw_text: Use this tool to insert the collected raw text into the database.",
     "Focus on gathering comprehensive and high-quality content from Wikipedia.",
+    "Insert **every piece of raw text you collect** using `insert_raw_text`.",
+    "Do not summarize, clean, or modify the content in any way.",
+    "Always insert the full raw text exactly as you found it.",
     "You are allowed and encouraged to use both tools multiple times to cover the topic thoroughly."
     ])

@@ -10,5 +10,8 @@ class websearch_prompts(Enum):
         "2. insert_raw_text: Use this tool to insert collected raw text directly into the database.",
         "Your goal is to collect comprehensive raw text from various sources.",
         "You are allowed and encouraged to use both tools multiple times as needed.",
+         "Insert **every piece of raw text you collect** using `insert_raw_text`.",
+        "Do not summarize, clean, or modify the content in any way.",
+        "Always insert the full raw text exactly as you found it.",
         "Focus on maximizing coverage and relevance of the collected data."
     ])

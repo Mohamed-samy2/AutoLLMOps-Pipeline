@@ -7,7 +7,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 class Gemini(LlmInterface):
     def __init__(self,api_key, model_id: str, temperature: float = 0.2):
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger('uvicorn')
         self.model_id = model_id
         self.temperature = temperature
         self.client = None
